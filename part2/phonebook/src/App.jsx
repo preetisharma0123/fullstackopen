@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import Person from './components/person.jsx'
 import Filter from './components/filter.jsx'
 import PhonebookForm from './components/phonebookForm.jsx'
@@ -8,6 +9,15 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterValue, setFilter] = useState('')
+
+  useEffect(() =>{
+    anxios
+    .get('http://localhost:3001/persons')
+    .then(response =>{
+      setPersons(response.data)
+    })
+  }, [])
+
 
   const namesToShow = filterValue
     ? persons.filter(person => person.name.toLowerCase().includes(filterValue.toLowerCase()))
