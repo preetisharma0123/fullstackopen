@@ -1,12 +1,12 @@
 const PhonebookForm = ({
-  handleClick,
+  onSubmit,
   newName,
   newNumber,
   newPersonName,
   newPersonNumber
 }) => {
   return(
-    <form onSubmit={handleClick}>
+    <form onSubmit={onSubmit}>
         <div>
           name: <input value={newName} onChange={newPersonName} />
         </div>
