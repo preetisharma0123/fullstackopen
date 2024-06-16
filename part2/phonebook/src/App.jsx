@@ -3,15 +3,16 @@ import Person from './components/person.jsx';
 import Filter from './components/filter.jsx';
 import PhonebookForm from './components/phonebookForm.jsx';
 import phonebookService from './services/phonebook';
-import Notification from "./components/Notification";
+import Notification from './components/Notification';
+import './index.css';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterValue, setFilter] = useState('');
-  const [message, setMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState();
+  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     phonebookService.getAll().then((initialData) => {
@@ -24,7 +25,9 @@ const App = () => {
     : persons;
 
   const handleFilterChange = (event) => {
+    console.log('Filter value before set:', filterValue);
     setFilter(event.target.value);
+    console.log('Filter value after set:', event.target.value);
   };
 
   const newPersonName = (event) => {
@@ -35,8 +38,6 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-
-  // add person to phonebook
   const handleClick = (event) => {
     event.preventDefault();
     const personObject = {
@@ -44,19 +45,16 @@ const App = () => {
       number: newNumber,
     };
 
-    //validate that the person's name and number exists
     const nameAndNumberExists = persons.find(
       (person) =>
         person.name === personObject.name &&
         person.number === personObject.number
     );
 
-    //validate that the person's name exists
     const personNameExists = persons.find(
       (person) => person.name === personObject.name
     );
 
-    //validate that the person's number exists
     const personNumberExists = persons.find(
       (person) => person.number === personObject.number
     );
@@ -79,8 +77,8 @@ const App = () => {
             setTimeout(() => {
               setMessage(null);
             }, 5000);
-            setNewName("");
-            setNewNumber("");
+            setNewName('');
+            setNewNumber('');
           })
           .catch((error) => {
             setErrorMessage(
@@ -94,7 +92,6 @@ const App = () => {
       }
     };
 
-    // check if name and number exists and show alert
     nameAndNumberExists
       ? alert(
           `${nameAndNumberExists.name} is already added to phonebook with number ${nameAndNumberExists.number}`
@@ -103,16 +100,13 @@ const App = () => {
       ? alert(
           `${personNumberExists.name} is already added to phonebook with number ${personNumberExists.number}`
         )
-      : // check if only the number already exists and show alert
-      !personNameExists && personNumberExists
+      : !personNameExists && personNumberExists
       ? alert(
           `${personNumberExists.name} is already added to phonebook with number ${personNumberExists.number}`
         )
-      : // update existing record if only the name exists
-      personNameExists && !personNumberExists
+      : personNameExists && !personNumberExists
       ? confirmUpdate(personNameExists)
-      : // create new record if new record does not exist
-        phonebookService
+      : phonebookService
           .create(personObject)
           .then((returnedData) => {
             setPersons(persons.concat(returnedData));
@@ -120,8 +114,8 @@ const App = () => {
             setTimeout(() => {
               setMessage(null);
             }, 5000);
-            setNewName("");
-            setNewNumber("");
+            setNewName('');
+            setNewNumber('');
           })
           .catch((error) => {
             console.log(error.response.data.error);
@@ -132,25 +126,34 @@ const App = () => {
           });
   };
 
-
-    //delete phonebook record
-    const removePersonOf = (id,name) =>{
-      if (window.confirm(`Do you really want to delete ${name}?`)){
-        phonebookService
-        .deletePerson(id)
-        .then((returnedData) => {
-          setPersons(persons.filter(person => person.id !==id));
-          console.log("Deleted")
-      })
+  const removePersonOf = (id, name) => {
+    if (window.confirm(`Do you really want to delete ${name}?`)) {
+      phonebookService.deletePerson(id).then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+        setMessage(`Deleted ${name}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+        setNewName('');
+        setNewNumber('');
+      }).catch((error) => {
+        console.log(error.response.data.error);
+        setErrorMessage(`${error.response.data.error} The person '${name}' was already deleted from server`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      });
     }
+  };
 
-  }
-    
+  console.log('Filter value in render:', filterValue);
+  console.log('Names to show:', namesToShow);
+
   return (
     <div>
       <h2>Phonebook</h2>
       
-      <Filter value={filterValue} onChange={handleFilterChange} />
+      <Filter filterValue={filterValue} handleFilterChange={handleFilterChange} />
 
       <PhonebookForm 
         onSubmit={handleClick}
@@ -165,8 +168,8 @@ const App = () => {
           <Person 
             key={person.id} 
             person={person} 
-            removePerson={()=>removePersonOf(person.id,person.name)}
-            />
+            removePerson={() => removePersonOf(person.id, person.name)}
+          />
         )}
       </ul>
     </div>
