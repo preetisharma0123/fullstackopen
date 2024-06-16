@@ -56,6 +56,20 @@ const App = () => {
     }
   };
 
+  //delete phonebook record
+  const removePersonOf = (id,name) =>{
+    if (window.confirm(`Do you really want to delete ${name}?`)){
+      phonebookService
+      .deletePerson(id)
+      .then((returnedData) => {
+        setPersons(persons.filter(person => person.id !==id));
+        console.log("Deleted")
+      })
+    }
+
+  }
+
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -72,7 +86,11 @@ const App = () => {
       <h2>Numbers</h2>
       <ul>
         {namesToShow.map(person => 
-          <Person key={person.id} person={person} />
+          <Person 
+            key={person.id} 
+            person={person} 
+            removePerson={()=>removePersonOf(person.id,person.name)}
+            />
         )}
       </ul>
     </div>
