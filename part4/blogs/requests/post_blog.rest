@@ -1,5 +1,5 @@
 POST http://localhost:3003/api/blogs
-Content-Type: application/application/json
+Content-Type: application/json
 
 {
     "title": "Influencers Are Racing to Profit From the Trump Shooting",
