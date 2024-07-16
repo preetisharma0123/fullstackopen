@@ -24,7 +24,7 @@ blogsRouter.get('/', (request, response) => {
   
   blogsRouter.post('/', (request, response, next) => {
     const body = request.body
-    if (body.content === undefined) {
+    if (body === undefined) {
       return response.status(400).json({ error: 'content missing' })
   }
     const blog = new Blog(request.body)
