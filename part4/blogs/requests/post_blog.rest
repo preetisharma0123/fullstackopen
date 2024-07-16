@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/application/json
+
+{
+    "title": "Influencers Are Racing to Profit From the Trump Shooting",
+    "author": "Makena Kelly",
+    "url": "https://www.wired.com/story/trump-shooting-influencer-merchandise/",
+    "likes": 1000
+}
