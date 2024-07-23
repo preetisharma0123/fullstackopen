@@ -51,7 +51,26 @@ const mostBlogs = (blogs) => {
   return authorBlogCount;
 };
 
+// define function mostLikes
+const mostLikes = (blogs) => {
+  // Group blogs by author and sum likes
+  const likesByAuthor = blogs.reduce((acc, blog) => {
+    acc[blog.author] = (acc[blog.author] || 0) + blog.likes;
+    return acc;
+  }, {});
+
+  // Find the author with the most likes
+  const mostLikedAuthor = Object.entries(likesByAuthor).reduce(
+    (max, [author, likes]) => {
+      return likes > max.likes ? { author, likes } : max;
+    },
+    { author: "", likes: 0 }
+  );
+
+  return mostLikedAuthor;
+};
+
 
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs
+  dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes
 }
