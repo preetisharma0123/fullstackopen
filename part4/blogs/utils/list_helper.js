@@ -31,6 +31,27 @@ const favoriteBlog = (blogs) => {
   return blogData;
 };
 
+// define function mostBlogs
+const mostBlogs = (blogs) => {
+  // count the occurences of each author
+  const authorCounts = _.countBy(blogs, "author");
+
+  // get the name of the author with the most blogs
+  const maxAuthorName = _.maxBy(
+    Object.keys(authorCounts),
+    (author) => authorCounts[author]
+  );
+
+  // create an object with the author name and the number of blogs
+  const authorBlogCount = {
+    author: maxAuthorName,
+    blogs: authorCounts[maxAuthorName],
+  };
+
+  return authorBlogCount;
+};
+
+
 module.exports = {
-  dummy, totalLikes, favoriteBlog
+  dummy, totalLikes, favoriteBlog, mostBlogs
 }
